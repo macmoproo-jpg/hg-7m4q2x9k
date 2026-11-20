@@ -1,6 +1,6 @@
 /* Home Grown — offline shell
    HTML: netwerk eerst (zo zie je updates meteen), assets: cache eerst. */
-const CACHE = "homegrown-v2";
+const CACHE = "homegrown-v3";
 const FILES = [
   "./",
   "./index.html",
@@ -9,11 +9,12 @@ const FILES = [
   "./icon-192.png",
   "./icon-512.png"
 ];
+const FRESH = u => new Request(u, { cache: "reload" });
 
 self.addEventListener("install", e => {
   e.waitUntil(
     caches.open(CACHE)
-      .then(c => c.addAll(FILES).catch(() => {}))
+      .then(c => c.addAll(FILES.map(f => FRESH(f))).catch(() => {}))
       .then(() => self.skipWaiting())
   );
 });
@@ -36,7 +37,7 @@ self.addEventListener("fetch", e => {
 
   if (isHTML) {
     e.respondWith(
-      fetch(req)
+      fetch(FRESH(req))
         .then(res => {
           const copy = res.clone();
           caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
