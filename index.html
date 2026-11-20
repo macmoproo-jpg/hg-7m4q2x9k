@@ -258,6 +258,21 @@ nav button.on .ic{transform:translateY(-1px)}
 .urlline{margin-top:12px;font-size:11px;color:var(--dim);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:9px;padding:9px 11px;
   overflow-x:auto;white-space:nowrap}
+.inst{border-color:rgba(255,138,61,.35);background:linear-gradient(180deg,rgba(255,138,61,.10),rgba(255,138,61,.03)),var(--surf);
+  position:relative}
+.inst-x{position:absolute;top:10px;right:12px;font-size:17px;color:var(--dim);width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;border-radius:50%}
+.inst-x:active{background:rgba(255,255,255,.08)}
+.inst-t{font-size:15px;font-weight:700;letter-spacing:-.02em;padding-right:24px}
+.inst-d{font-size:12px;color:var(--dim);margin:3px 0 12px;line-height:1.4}
+.inst-body{display:grid;gap:8px;font-size:12.5px;line-height:1.45}
+.is{display:flex;gap:10px;align-items:flex-start;color:var(--dim);line-height:1.45}
+.is>span:last-child{flex:1}
+.is b{color:var(--ink)}
+.n1{width:19px;height:19px;flex:none;border-radius:50%;background:var(--acc);color:#1a0d03;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.qrwrap{display:flex;justify-content:center;padding:14px 0 6px}
+.qr{width:170px;height:170px;border-radius:14px;background:#fff}
 /* misc */
 .note{font-size:12.5px;color:var(--dim);margin-top:10px}
 .ref h3{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);margin:18px 0 6px}
@@ -414,6 +429,9 @@ const TESTS=[
   {k:"split",l:"Zijsplit",u:"°",ph:"0"},
   {k:"wandelen",l:"Onderrug na 30 min lopen",u:"1-5",ph:"3"}
 ];
+
+let DEFERRED=null;
+const qrdata="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";
 
 /* ============ state ============ */
 const KEY="grondwerk-v1";
@@ -793,8 +811,50 @@ function viewLib(){
   f.append(el("div","note","Alles hier is vrij te kiezen. Wat je vandaag doet staat onder Vandaag — dit is de kast."));
   return f;
 }
+function device(){
+  const ua=navigator.userAgent||"";
+  const ios=/iPad|iPhone|iPod/.test(ua) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+  return {ios, iosBrowser: ios && !/CriOS|FxiOS|EdgiOS|GSA/.test(ua),
+          android: /Android/.test(ua), standalone: navigator.standalone ||
+          window.matchMedia("(display-mode: standalone)").matches};
+}
+function installCard(){
+  const d=device();
+  if(d.standalone || S.noinstall===dkey()) return null;
+  const qr=`<img class="qr" src="data:image/png;base64,${qrdata}" alt="QR">`;
+  let body;
+  if(d.iosBrowser){
+    body=`<div class="is"><span class="n1">1</span><span>Tik op het <b>deel-icoon</b> onderaan — het vierkantje met het pijltje omhoog</span></div>
+      <div class="is"><span class="n1">2</span><span>Scroll naar beneden → <b>"Zet op beginscherm"</b></span></div>
+      <div class="is"><span class="n1">3</span><span>Tik op <b>Voeg toe</b> — het icoon staat nu op je scherm</span></div>`;
+  } else if(d.ios){
+    body=`Je opent dit nu in een andere browser. Op de iPhone kan alleen <b>Safari</b> de app installeren.
+      Kopieer de link hieronder, open Safari en plak hem daar.
+      <div class="urlline" style="margin-top:8px">${location.href}</div>`;
+  } else if(d.android){
+    body=DEFERRED
+      ? `Tik op de knop hieronder en bevestig.`
+      : `<div class="is"><span class="n1">1</span><span>Tik op het <b>menu</b> rechtsboven in Chrome — de drie puntjes</span></div>
+         <div class="is"><span class="n1">2</span><span>Tik op <b>"App installeren"</b> of <b>"Toevoegen aan startscherm"</b></span></div>`;
+  } else {
+    body=`<div>Scan de code met de camera van je telefoon, of open de link er.<br><br>
+      Op de iPhone: <b>deel → "Zet op beginscherm"</b>.<br>Op Android: <b>menu → "App installeren"</b>.</div>
+      <div class="qrwrap">${qr}</div>`;
+  }
+  const card=el("div","card inst");
+  card.innerHTML=`<div class="inst-x" id="noinst">×</div>
+    <div class="inst-t">Zet Home Grown op je beginscherm</div>
+    <div class="inst-d">Als app: icoon op je scherm, schermvullend, en hij blijft werken zonder internet.</div>
+    <div class="inst-body">${body}</div>
+    ${(!d.ios && d.android && DEFERRED)?`<button class="cta" id="installbtn">Installeren</button>`:""}`;
+  card.querySelector("#noinst").onclick=e=>{ e.stopPropagation(); S.noinstall=dkey(); save(); render() };
+  const b=card.querySelector("#installbtn");
+  if(b) b.onclick=async()=>{ if(!DEFERRED) return; DEFERRED.prompt(); const r=await DEFERRED.userChoice; if(r.outcome==="accepted") DEFERRED=null; };
+  return card;
+}
 function viewToday(){
   const d=todayCode(), ds=dkey(), p=P[d], f=document.createDocumentFragment();
+  const ic=installCard(); if(ic) f.append(ic);
   f.append(seg());
   if(MODE==="slot"){ f.append(slotCard()); return f }
   const t=totalOf(d), dn=doneOn(ds,d), pc=t?Math.round(dn/t*100):0;
@@ -958,11 +1018,12 @@ function viewRef(){
   const inst=el("div","card");
   inst.innerHTML=`<h2>Op je telefoon</h2>
     <div class="meta">Zet Home Grown als app op je beginscherm — dan opent hij schermvullend en werkt hij zonder internet.</div>
+    <div class="qrwrap"><img class="qr" src="data:image/png;base64,${qrdata}" alt="QR"></div>
     <div class="steps">
-      <div><b>iPhone</b><span>Open de link in Safari → deel-icoon onderaan → "Zet op beginscherm"</span></div>
-      <div><b>Android</b><span>Open de link in Chrome → menu rechtsboven → "App installeren"</span></div>
+      <div><b>iPhone</b><span>Safari → deel-icoon onderaan → "Zet op beginscherm"</span></div>
+      <div><b>Android</b><span>Chrome → menu rechtsboven → "App installeren"</span></div>
     </div>
-    <button class="cta" id="installbtn" hidden>Zet op je beginscherm</button>
+    <button class="cta" id="installbtn" hidden>Installeren</button>
     <div class="urlline" id="urlline"></div>`;
   f.append(inst);
   const c=el("div","card ref");
@@ -1077,7 +1138,6 @@ function beep(){
 }
 
 /* ============ init ============ */
-let DEFERRED=null;
 window.addEventListener("beforeinstallprompt",e=>{
   e.preventDefault(); DEFERRED=e;
   const b=document.getElementById("installbtn"); if(b) b.hidden=false;
