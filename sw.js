@@ -1,5 +1,6 @@
-/* Home Grown — offline shell */
-const CACHE = "homegrown-v1";
+/* Home Grown — offline shell
+   HTML: netwerk eerst (zo zie je updates meteen), assets: cache eerst. */
+const CACHE = "homegrown-v2";
 const FILES = [
   "./",
   "./index.html",
@@ -29,21 +30,30 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
-  if (url.origin !== location.origin) return; // YouTube-links gewoon doorlaten
+  if (url.origin !== location.origin) return;
+
+  const isHTML = req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html");
+
+  if (isHTML) {
+    e.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+          return res;
+        })
+        .catch(() => caches.match(req).then(hit => hit || caches.match("./index.html")))
+    );
+    return;
+  }
 
   e.respondWith(
     caches.match(req).then(hit => {
-      if (hit) {
-        // op de achtergrond verversen
-        fetch(req).then(res => {
-          if (res && res.status === 200) caches.open(CACHE).then(c => c.put(req, res.clone()));
-        }).catch(() => {});
-        return hit;
-      }
+      if (hit) return hit;
       return fetch(req).then(res => {
         if (res && res.status === 200) {
           const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy));
+          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
         }
         return res;
       }).catch(() => caches.match("./index.html"));
