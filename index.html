@@ -244,9 +244,10 @@ nav button.on .ic{transform:translateY(-1px)}
 .li-y{grid-area:y}
 
 .empty{padding:6px 0 2px}
-.empty .cta{width:100%;margin-top:12px;background:linear-gradient(180deg,var(--acc2),var(--acc));color:#20100a;
-  font-weight:700;font-size:13.5px;border-radius:12px;padding:12px}
-.empty .cta:active{opacity:.9}
+.cta{width:100%;margin-top:12px;background:linear-gradient(180deg,var(--acc2),var(--acc));color:#20100a;
+  font-weight:700;font-size:13.5px;border-radius:12px;padding:13px;letter-spacing:-.01em;
+  box-shadow:0 8px 20px -12px rgba(255,138,61,.9)}
+.cta:active{opacity:.88;transform:scale(.995)}
 
 .secthead{padding:2px 4px 10px}
 .secthead h2{font-size:19px;letter-spacing:-.03em}
@@ -258,6 +259,9 @@ nav button.on .ic{transform:translateY(-1px)}
 .urlline{margin-top:12px;font-size:11px;color:var(--dim);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:9px;padding:9px 11px;
   overflow-x:auto;white-space:nowrap}
+.cta2{display:block;width:100%;text-align:center;margin-top:8px;border:1px solid var(--hair);
+  border-radius:12px;padding:12px;font-size:13.5px;font-weight:600;color:var(--ink);background:rgba(255,255,255,.03);cursor:pointer}
+.cta2:active{background:rgba(255,255,255,.07)}
 .inst{border-color:rgba(255,138,61,.35);background:linear-gradient(180deg,rgba(255,138,61,.10),rgba(255,138,61,.03)),var(--surf);
   position:relative}
 .inst-x{position:absolute;top:10px;right:12px;font-size:17px;color:var(--dim);width:26px;height:26px;
@@ -1026,6 +1030,35 @@ function viewRef(){
     <button class="cta" id="installbtn" hidden>Installeren</button>
     <div class="urlline" id="urlline"></div>`;
   f.append(inst);
+  const bk=el("div","card");
+  bk.innerHTML=`<h2>Back-up</h2>
+    <div class="meta">Je voortgang, je nulmeting en je "waarom" staan alleen in deze browser. Maak af en toe een bestandje — dan ben je niets kwijt als je je telefoon leegmaakt.</div>
+    <button class="cta" id="expbtn">Download back-up</button>
+    <label class="cta2" for="impfile">Back-up terugzetten</label>
+    <input type="file" id="impfile" accept="application/json,.json" hidden>
+    <div class="note" style="margin-top:10px">Bewaar het bestand in iCloud of Mail. Het is leesbare tekst — je kan het openen en lezen.</div>`;
+  bk.querySelector("#expbtn").onclick=()=>{
+    const blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download="home-grown-"+dkey()+".json";
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+    toast("Back-up gedownload");
+  };
+  bk.querySelector("#impfile").onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const j=JSON.parse(r.result);
+        if(!j||typeof j!=="object"||Array.isArray(j)) throw 0;
+        S=j; save(); render(); toast("Back-up teruggezet");
+      }catch(err){ toast("Dat is geen geldige back-up") }
+    };
+    r.readAsText(f);
+  };
+  f.append(bk);
+
   const c=el("div","card ref");
   c.innerHTML=`
   <h2>Naslag</h2><div class="meta">De regels, de bar, het lopen, het eten.</div>
