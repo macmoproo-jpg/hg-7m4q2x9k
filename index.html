@@ -425,6 +425,7 @@ const BLOCKS=[
     ["3× per dag de tuintrap op (3 dagen per week)",null]]}
 ];
 const TESTS=[
+  {k:"knee2wall",l:"Knie over de teen (enkel)",u:"cm",ph:"0"},
   {k:"hurk",l:"Hurk met platte voeten",u:"min",ph:"0"},
   {k:"kuit",l:"Kuitraise één been",u:"×",ph:"0"},
   {k:"hang",l:"Hangen aan de bar",u:"sec",ph:"0"},
@@ -1032,9 +1033,27 @@ function viewTest(){
   });
   c.innerHTML=html;
   c.querySelectorAll("input").forEach(inp=>{
-    inp.onchange=()=>{ S.test[inp.dataset.k]=inp.value; S.test._date=dkey(); save(); checkBadges() };
+    inp.onchange=()=>{ S.test[inp.dataset.k]=inp.value; S.test._date=dkey(); save(); checkBadges();
+      if(inp.dataset.k==="knee2wall") render() };
   });
   f.append(c);
+
+  const kw=parseFloat(S.test.knee2wall);
+  if(!isNaN(kw)&&kw>0){
+    let kop,txt;
+    if(kw<8){ kop="Je enkel is de poort.";
+      txt="Onder de 8 cm. Geen enkele oefening boven de enkel komt er echt door: je kuit, je voet en je enkel krijgen alles. Dit is je bottleneck, wat je boven ook doet."; }
+    else if(kw<10){ kop="Grensgeval.";
+      txt="Tussen 8 en 10 cm. Je enkel remt nog, maar er komt beweging in. Blijf hier nog vier weken en meet opnieuw."; }
+    else { kop="Je enkel is vrij.";
+      txt="Boven de 10 cm. Je onderbeen houdt je niet meer tegen. Je volgende prioriteit ligt hoger: serratus, schouderblad en ribben naar beneden — wall slides en push-up plus."; }
+    const pc=el("div","card");
+    pc.innerHTML=`<h2>Je poort</h2>
+      <div style="font-weight:650;font-size:15px;color:#ff8a3d;margin:2px 0 6px">${kop}</div>
+      <div class="meta">${txt}</div>`;
+    f.append(pc);
+  }
+
   f.append(el("div","note","Doel na 8 weken: hurk 1 minuut plat · kuitraise 20× · hangen 45 sec · 3×8 scapular. Na 12 weken: 1 pull-up en 110° zijsplit."));
   return f;
 }
