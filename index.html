@@ -357,7 +357,7 @@ const P = {
     {n:"Split squat",d:"15 kg",s:4,r:"8 per been",t:"3-1-1",rest:90,v:Y.split},
     {n:"Hip thrust",d:"schouders op de stoel",s:3,r:"12",t:"2 s knijpen",rest:75,v:Y.hipthrust},
     {n:"Heup scharnieren (RDL)",d:"15 kg",s:3,r:"10",t:"3-1-1",rest:75,v:Y.hinge},
-    {n:"Kuitraise",d:"op de traptrede",s:3,r:"15",t:"3 s zakken",rest:60,v:Y.calf},
+    {n:"Kuitraise",d:"op de traptrede, rugzak om (15 kg)",s:3,r:"12",t:"3 s zakken · 2 s onderin",rest:60,v:Y.calf},
     {n:"Dead bug",d:"lange uitademing",s:3,r:"8 per kant",t:"langzaam",rest:45,v:Y.deadbug},
     {n:"Copenhagen plank",d:"onderbeen op de stoel",s:3,r:"20 s per kant",t:"ademen",rest:45,v:Y.copenhagen}
   ]},
@@ -373,7 +373,7 @@ const P = {
     {n:"Single-leg RDL",d:"10 kg",s:3,r:"8 per been",t:"3-1-1",rest:60,v:Y.hinge},
     {n:"Single-leg glute bridge",d:"",s:3,r:"12 per been",t:"2 s knijpen",rest:60,v:Y.slbridge},
     {n:"Copenhagen plank",d:"",s:3,r:"20 s per kant",t:"ademen",rest:45,v:Y.copenhagen},
-    {n:"Kuitraise zittend",d:"gewicht op je knie",s:3,r:"15",t:"3 s zakken",rest:60,v:Y.calf},
+    {n:"Kuitraise zittend",d:"10 kg op je knie · de diepe kuit",s:3,r:"12",t:"3 s zakken · 2 s onderin",rest:60,v:Y.calf},
     {n:"Side plank",d:"",s:3,r:"20 s per kant",t:"ademen",rest:45,v:null}
   ]},
   do:{title:"Bovenkant B",sub:"plus nek",dur:"30 min",ex:[
@@ -388,7 +388,7 @@ const P = {
     {n:"Step-up",d:"tuintrap · 15 kg",s:3,r:"10 per been",t:"3 s zakken",rest:75,v:Y.stepup},
     {n:"Split squat",d:"zonder gewicht · 3 s pauze onderin",s:3,r:"12 per been",t:"3-3-1",rest:60,v:Y.split},
     {n:"Nordic curl",d:"met band",s:3,r:"6",t:"4 s zakken",rest:75,v:Y.nordic},
-    {n:"Kuitraise",d:"op de traptrede",s:3,r:"15",t:"3 s zakken",rest:60,v:Y.calf},
+    {n:"Kuitraise",d:"op de traptrede, rugzak om (15 kg)",s:3,r:"12",t:"3 s zakken · 2 s onderin",rest:60,v:Y.calf},
     {n:"Plank",d:"ribben naar beneden, geen holle rug",s:3,r:"40 s",t:"ademen",rest:45,v:"A2b2EmIg0dA"}
   ]},
   za:{title:"Licht",sub:"wandelen, hurken, mobiliteit",dur:"30 min",ex:[
@@ -1030,6 +1030,17 @@ function viewRef(){
     <button class="cta" id="installbtn" hidden>Installeren</button>
     <div class="urlline" id="urlline"></div>`;
   f.append(inst);
+  const nl=el("div","card");
+  nl.innerHTML=`<h2>Volgende niveau</h2>
+    <div class="meta">De vier dingen die het verschil maken als de basis staat.</div>
+    <div class="steps">
+      <div><b>Zwaar</b><span>Lichaamsgewicht alleen verandert je bereik niet. Extern gewicht wel — rugzak met platen, 15 kg.</span></div>
+      <div><b>Tempo</b><span>3 seconden zakken, 2 seconden onderin blijven. Daar zit de winst, niet in meer herhalingen.</span></div>
+      <div><b>Eén been</b><span>Split squat, single-leg RDL, step-up. Met jouw gewichten is dat je enige echt zware belasting.</span></div>
+      <div><b>De 16 uur</b><span>Elk uur een minuut op de grond hurken weegt zwaarder dan de training zelf.</span></div>
+    </div>`;
+  f.append(nl);
+
   const bk=el("div","card");
   bk.innerHTML=`<h2>Back-up</h2>
     <div class="meta">Je voortgang, je nulmeting en je "waarom" staan alleen in deze browser. Maak af en toe een bestandje — dan ben je niets kwijt als je je telefoon leegmaakt.</div>
