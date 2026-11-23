@@ -256,6 +256,11 @@ nav button.on .ic{transform:translateY(-1px)}
 .steps{display:grid;gap:9px;margin:12px 0 4px}
 .steps div{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--dim);line-height:1.4}
 .steps b{color:var(--ink);font-size:11px;letter-spacing:.06em;text-transform:uppercase;flex:0 0 56px;padding-top:2px}
+.rules{display:grid;gap:0;margin:12px 0 2px}
+.rules>div{padding:9px 0;border-bottom:1px solid #1b2230}
+.rules>div:last-child{border-bottom:0;padding-bottom:2px}
+.rules b{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--acc);margin-bottom:3px}
+.rules span{display:block;font-size:12.5px;color:var(--dim);line-height:1.5}
 .urlline{margin-top:12px;font-size:11px;color:var(--dim);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:9px;padding:9px 11px;
   overflow-x:auto;white-space:nowrap}
@@ -389,7 +394,8 @@ const P = {
     {n:"Split squat",d:"zonder gewicht · boek onder je voorvoet · 3 s pauze onderin",s:3,r:"12 per been",t:"3-3-1",rest:60,v:Y.split},
     {n:"Nordic curl",d:"met band",s:3,r:"6",t:"4 s zakken",rest:75,v:Y.nordic},
     {n:"Kuitraise",d:"op de traptrede, rugzak om (15 kg)",s:3,r:"12",t:"3 s zakken · 2 s onderin",rest:60,v:Y.calf},
-    {n:"Plank",d:"ribben naar beneden, geen holle rug",s:3,r:"40 s",t:"ademen",rest:45,v:"A2b2EmIg0dA"}
+    {n:"Plank",d:"ribben naar beneden, geen holle rug",s:3,r:"40 s",t:"ademen",rest:45,v:"A2b2EmIg0dA"},
+    {n:"Kettlebell swing",d:"16 kg · scharnier, geen squat",s:2,r:"20",t:"krachtig uitademen",rest:60,v:"bDCeXbMJVNs"}
   ]},
   za:{title:"Licht",sub:"wandelen, hurken, mobiliteit",dur:"30 min",ex:[
     {n:"Wandelen of tuintrap",d:"8× op, rustig af",s:1,r:"20 min",t:"—",rest:0,v:null},
@@ -444,6 +450,7 @@ const KEY="grondwerk-v1";
 let S = {};
 try{ S = JSON.parse(localStorage.getItem(KEY)||"{}") }catch(e){ S={} }
 S.log = S.log||{}; S.blk = S.blk||{}; S.test = S.test||{}; S.min = S.min||{}; S.badges = S.badges||{};
+S.start = S.start || dkey();
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)) }catch(e){} }
 function dkey(d){ d=d||new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0") }
 function todayCode(){ return DAGEN[new Date().getDay()] }
@@ -756,7 +763,9 @@ const LIB=[
   {n:"Bekken kantelen, stap voor stap",d:"8 min",cue:"Squat University",v:"XkaVLh59mkc"},
   {n:"Heupbuiger rek",d:"30 s per kant",cue:"bekken onder je, niet hol trekken",v:"6o-GpPIGR5w"},
   {n:"Adductor rockback",d:"2×10",cue:"rustig zakken, lies laat los",v:"YRRnnZsRs9U"},
-  {n:"Copenhagen plank",d:"20 s per kant",cue:"de lies, niet je knie",v:"YRRnnZsRs9U"}]},
+  {n:"Copenhagen plank",d:"20 s per kant",cue:"de lies, niet je knie",v:"YRRnnZsRs9U"},
+  {n:"Kettlebell swing",d:"2×20",cue:"heup scharniert, rug blijft recht — geen squat",v:"bDCeXbMJVNs"},
+  {n:"Goblet squat",d:"3×10",cue:"kettlebell tegen je borst, boek onder je hak",v:"Ndbc-Ave2G0"}]},
  {c:"Ribben & ademhaling",s:"dit is waarom je nek pijn doet",items:[
   {n:"90/90 ademhaling",d:"5×",cue:"uitademen is het werk, niet inademen",v:"zahJuD98ko8"},
   {n:"Ribflare sluiten",d:"2×10",cue:"Conor Harris — één oefening",v:"FWQf2Ol2OxM"},
@@ -983,6 +992,23 @@ function viewProgress(){
   if(leeg){ const g=m.querySelector("#gonul"); if(g) g.onclick=()=>{ VIEW="test"; render(); window.scrollTo(0,0) } }
   f.append(m);
 
+  const start=S.start||dkey();
+  let dag=1;
+  try{ dag=Math.max(1,Math.round((new Date(dkey()+"T00:00:00")-new Date(start+"T00:00:00"))/86400000)+1) }catch(e){}
+  const TOT=56, dd=Math.min(dag,TOT);
+  const fase = dag<=14 ? "De pezen wennen. Dit is de fase waarin bijna iedereen stopt — niet omdat het niet werkt, maar omdat het nog niet voelt."
+    : dag<=28 ? "De eerste krachtwinst komt nu. Je merkt het aan de gewichten, nog niet aan je houding. Dat is normaal."
+    : dag<=42 ? "Je bereik begint te veranderen. Meet je knie-over-teen opnieuw en vergelijk met je nulmeting."
+    : "Tijd om te vergelijken. Zelfde testen als dag 1, en dan beslissen wat door gaat en wat niet.";
+  const kc=el("div","card");
+  kc.innerHTML=`<h2>Dag ${dd} van ${TOT}</h2>
+    <div class="meta">Pezen lopen maanden achter op spieren (Kubo). Tot dag 56 bouw je vooral bindweefsel — dat voelt traag en is het niet.</div>
+    <div style="height:10px;background:#1c2331;border-radius:6px;overflow:hidden;margin:14px 0">
+      <div style="height:100%;width:${Math.round(dd/TOT*100)}%;background:linear-gradient(90deg,#ff8a3d,#ffb37a)"></div>
+    </div>
+    <div class="meta">${fase}</div>`;
+  f.append(kc);
+
   const bg=el("div","card");
   let cells="";
   BADGES.forEach(b=>{
@@ -1098,13 +1124,28 @@ function viewRef(){
     </div>`;
   f.append(nl);
 
+  const kn=el("div","card");
+  kn.innerHTML=`<h2>Kort en waar</h2>
+    <div class="meta">De acht dingen die ik je heb uitgezocht, in één blik.</div>
+    <div class="rules">
+      <div><b>Kraken zonder pijn</b><span>is lucht die inklapt, geen slijtage. Forceer het niet, rek kleiner en vaker.</span></div>
+      <div><b>Koude tenen die opwarmen</b><span>zijn doorbloeding. Je kuit is de pomp — 20 kuitraises per uur zitten.</span></div>
+      <div><b>188 cm, lange benen</b><span>je hurk klapt naar voren door geometrie, niet door stijfheid. Boek onder je voorvoet.</span></div>
+      <div><b>Je heupbuiger rekken</b><span>verandert je bekkenkanteling 1,2°. Dat is de hele opbrengst.</span></div>
+      <div><b>Alleen lichaamsgewicht</b><span>verandert je bereik niet. Gewicht en tempo wel.</span></div>
+      <div><b>Tenen</b><span>3 minuten per dag is de dosis. Ze worden snel sore, dus niet verdubbelen.</span></div>
+      <div><b>Eiwit</b><span>1,6 g per kg, vier momenten van 30 g. Ongeveer 120 g per dag.</span></div>
+      <div><b>De 16 uur</b><span>winnen altijd van de training. Zit op de grond, neem de trap, loop met blote voeten.</span></div>
+    </div>`;
+  f.append(kn);
+
   const sp=el("div","card");
   sp.innerHTML=`<h2>Spullen</h2>
     <div class="meta">Wat je nodig hebt, in volgorde. Alles bij elkaar ongeveer €100–150; de rest is gratis.</div>
-    <div class="steps">
-      <div><b>Kettlebell 16 kg</b><span>€30–55 · je beste aankoop. Swing is je heupscharnier, goblet squat en carry in één.</span></div>
+    <div class="rules">
+      <div><b>✓ Kettlebell 16 kg</b><span>heb je. Swing 2×20 op vrijdag, goblet squat 3×10 als je split squat wil afwisselen.</span></div>
+      <div><b>✓ Minimalistische schoenen</b><span>heb je. Draag ze alleen bij het wandelen: 15 min → 2 uur in zes weken. Niet hardlopen.</span></div>
       <div><b>Loopbanden, set van 3</b><span>€15–20 · zijwaarts lopen, pull-apart, Pallof. Progressie boven je vaste band.</span></div>
-      <div><b>Minimalistische schoenen</b><span>€57–80 · alleen voor wandelen. 15 min → 2 uur in zes weken. Niet hardlopen.</span></div>
       <div><b>Zachte bal</b><span>€5 · je huidige is te hard voor je voet.</span></div>
       <div><b>Meetlint</b><span>€3 · knie-over-teen en grote teen meten.</span></div>
       <div><b>Rugzak + flessen</b><span>gratis · 0–15 kg extra gewicht voor split squats en carries.</span></div>
