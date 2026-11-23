@@ -567,6 +567,11 @@ const POOL=[
 const YT=l=>l?`<a class="yt sm" href="https://www.youtube.com/watch?v=${l}" target="_blank" rel="noopener" title="hoe">▶</a>`:"";
 let MODE="plan", CHAIN=null;
 
+const TOE=[
+ {n:"Teenyoga",d:"10× per voet",cue:"grote teen omlaag, de vier ernaast omhoog — en dan wisselen. Dit is de oefening die niemand doet.",v:"rkjuZVy3vRo"},
+ {n:"Grote teen strekken",d:"10× per kant, in stand",cue:"hiel op de grond, teen omhoog zonder de voet te draaien. Onder de 30° is het je volgende project.",v:"It6vngBeRFg"},
+ {n:"Afrollen over de grote teen",d:"20 passen per voet",cue:"langzaam lopen en bewust over de bal van je grote teen afduwen. Zo gebruik je hem zoals hij bedoeld is.",v:"Hk_Ri7jUFWU"}
+];
 const AUTO=[
  {n:"Blote voeten of minimalistische schoenen",d:"15 min → 2 uur per dag",
   cue:"wandelen erin geeft evenveel voetspiergroei als de oefeningen zelf",v:"Hk_Ri7jUFWU"},
@@ -1011,6 +1016,16 @@ function viewDaily(){
     });
     f.append(card);
   });
+
+  const tee=el("div","card");
+  tee.innerHTML=`<h2>Tenen — 3 minuten</h2>
+    <div class="meta">Je tenen doen niets bij het lopen als je schoen ze opsluit. Dit is de spiergroep die je elke dag gebruikt en nooit belast.</div>`
+    + TOE.map(it=>`<div class="libitem">
+        <div class="li-n">${it.n}</div><div class="li-d">${it.d}</div>
+        <div class="li-c">${it.cue}</div>
+        ${YT(it.v).replace('class="yt sm"','class="yt sm li-y"')}
+      </div>`).join("");
+  f.append(tee);
 
   const au=el("div","card");
   au.innerHTML=`<h2>Vanzelf</h2>
