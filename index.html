@@ -373,7 +373,7 @@ const P = {
     {n:"Single-leg RDL",d:"10 kg",s:3,r:"8 per been",t:"3-1-1",rest:60,v:Y.hinge},
     {n:"Single-leg glute bridge",d:"",s:3,r:"12 per been",t:"2 s knijpen",rest:60,v:Y.slbridge},
     {n:"Copenhagen plank",d:"",s:3,r:"20 s per kant",t:"ademen",rest:45,v:Y.copenhagen},
-    {n:"Kuitraise zittend",d:"10 kg op je knie · de diepe kuit",s:3,r:"12",t:"3 s zakken · 2 s onderin",rest:60,v:Y.calf},
+    {n:"Kuitraise zittend",d:"10 kg op je knie · de diepe kuit",s:3,r:"12",t:"3 s zakken · 2 s onderin",rest:60,v:"iaxCtsXxWqw"},
     {n:"Side plank",d:"",s:3,r:"20 s per kant",t:"ademen",rest:45,v:null}
   ]},
   do:{title:"Bovenkant B",sub:"plus nek",dur:"30 min",ex:[
@@ -565,6 +565,18 @@ const POOL=[
 const YT=l=>l?`<a class="yt sm" href="https://www.youtube.com/watch?v=${l}" target="_blank" rel="noopener" title="hoe">▶</a>`:"";
 let MODE="plan", CHAIN=null;
 
+const AUTO=[
+ {n:"Blote voeten of minimalistische schoenen",d:"15 min → 2 uur per dag",
+  cue:"wandelen erin geeft evenveel voetspiergroei als de oefeningen zelf",v:"Hk_Ri7jUFWU"},
+ {n:"Cadans omhoog",d:"+5 tot 10% stappen per minuut",
+  cue:"minder belasting op heup en knie, minder overstriden",v:"yXiG7ND-7O4"},
+ {n:"Zit op de grond",d:"elk uur een minuut",
+  cue:"tijd in het bereik dat de stoel je afneemt",v:"L_9oU88UH_I"},
+ {n:"De trap af",d:"dagelijks, zo vaak je kan",
+  cue:"je kuit werkt excentrisch in het eindbereik — precies je kuitraise, maar dan echt",v:"r1YBXgc0bdE"},
+ {n:"Loop met 15 kg op je rug",d:"20 minuten",
+  cue:"verandert je rompspieren en hoe je je houdt tijdens het lopen",v:"lLAw6fUccKA"}
+];
 function seg(){
   const d=el("div","seg");
   d.innerHTML=`<button data-m="plan" class="${MODE==="plan"?"on":""}">Mijn training</button>
@@ -997,6 +1009,16 @@ function viewDaily(){
     });
     f.append(card);
   });
+
+  const au=el("div","card");
+  au.innerHTML=`<h2>Vanzelf</h2>
+    <div class="meta">Deze vijf dingen corrigeren je zonder dat je ze als oefening doet. Samen zijn ze 16 uur per dag — meer dan je training ooit kan zijn.</div>`
+    + AUTO.map(it=>`<div class="libitem">
+        <div class="li-n">${it.n}</div><div class="li-d">${it.d}</div>
+        <div class="li-c">${it.cue}</div>
+        ${YT(it.v).replace('class="yt sm"','class="yt sm li-y"')}
+      </div>`).join("");
+  f.append(au);
   return f;
 }
 
